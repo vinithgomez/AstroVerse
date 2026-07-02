@@ -195,3 +195,22 @@ All textures downloaded and organized under `/public/textures/<planet>/`. Source
 - Do not invent specific scientific facts (moon counts, temperatures, exact dates) without flagging them as needing verification.
 - Keep all new code consistent with the Design System tokens in Section 3 — no ad hoc colors/fonts.
 - Prefer editing this file over assuming context will be remembered from chat history alone.
+
+---
+
+## 10. Custom Commands
+
+### "PUSH" (standalone, all caps)
+
+When the user types the word `PUSH` on its own (all caps, standalone — not part of a sentence), treat it as shorthand for: **commit and push all current changes to GitHub.** Do the following, in order:
+
+1. Run `git status` and show the user what's changed.
+2. Before staging anything, verify `.gitignore` still properly excludes `.env`, `node_modules/`, and `dist/` — never commit secrets. If any of these show up as trackable/staged, stop and flag it to the user instead of proceeding.
+3. Check whether `README.md`'s "Current Build Status" section still matches reality — e.g. if a placeholder page from the "🚧 In progress" list was completed this session, or a new "Known gap" was introduced/resolved. If it needs updating, update it as part of the same commit. If nothing meaningful changed about project status, leave the README as-is.
+4. Run `git add .`
+5. Generate a clear, descriptive commit message that summarizes what was **actually built or changed in the session** — never a generic message like "update" or "changes". Base it on the real diff/session content.
+6. Commit with that message.
+7. Push to `main` on the existing `origin` remote.
+8. Confirm the push succeeded and give the user the GitHub URL (`https://github.com/vinithgomez/AstroVerse`).
+
+**Critical rule — no AI attribution in commits for this project:** Commits must NOT include a `Co-Authored-By: Claude` trailer, a "Generated with Claude Code" footer, or any other reference to Claude/Anthropic anywhere in the commit message. This project's commits are authored solely under the user's own configured git identity (`vinithgomez <vinithgomez36@gmail.com>`), with a clean message containing only the actual summary of changes. This overrides the default Claude Code commit-message convention — it applies specifically to this repository, per the user's explicit instruction.
