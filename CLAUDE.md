@@ -214,3 +214,7 @@ When the user types the word `PUSH` on its own (all caps, standalone — not par
 8. Confirm the push succeeded and give the user the GitHub URL (`https://github.com/vinithgomez/AstroVerse`).
 
 **Critical rule — no AI attribution in commits for this project:** Commits must NOT include a `Co-Authored-By: Claude` trailer, a "Generated with Claude Code" footer, or any other reference to Claude/Anthropic anywhere in the commit message. This project's commits are authored solely under the user's own configured git identity (`vinithgomez <vinithgomez36@gmail.com>`), with a clean message containing only the actual summary of changes. This overrides the default Claude Code commit-message convention — it applies specifically to this repository, per the user's explicit instruction.
+
+### Reminder to PUSH
+
+Whenever a page is finished (e.g. a placeholder route becomes a real, working page) or a major bug is fixed during a session, proactively remind the user at that point to type `PUSH` if they want to commit and push the work — don't wait to be asked. Keep it to a short one-line nudge, not a repeat of the whole PUSH workflow. Do not nag for minor tweaks, small copy edits, or in-progress work that isn't at a natural stopping point.
