@@ -1,0 +1,39 @@
+:root {
+  /* Background layers */
+  --color-bg:           #0a0a0f;
+  --color-surface:      #0f1117;
+  --color-surface-high: #161b27;
+  --color-border:       #1e2130;
+  --color-border-muted: #13172050;
+
+  /* Accent palette */
+  --color-blue:    #4f8ef7;
+  --color-blue-10: rgba(79, 142, 247, 0.10);
+  --color-blue-20: rgba(79, 142, 247, 0.20);
+  --color-blue-glow: rgba(79, 142, 247, 0.35);
+
+  --color-purple:    #8b5cf6;
+  --color-purple-10: rgba(139, 92, 246, 0.10);
+  --color-purple-20: rgba(139, 92, 246, 0.20);
+  --color-purple-glow: rgba(139, 92, 246, 0.35);
+
+  /* Semantic / status */
+  --color-success:  #22c55e;
+  --color-warning:  #eab308;
+  --color-danger:   #ef4444;
+  --color-debate:   #f97316;
+
+  --color-success-10: rgba(34, 197, 94, 0.10);
+  --color-warning-10: rgba(234, 179, 8, 0.10);
+  --color-danger-10:  rgba(239, 68, 68, 0.10);
+  --color-debate-10:  rgba(249, 115, 22, 0.10);
+
+  /* Typography */
+  --color-text-primary: #f0f4ff;
+  --color-text-muted:   #8892a4;
+  --color-text-faint:   #4a5568;
+
+  /* Glass */
+  --glass-bg:     rgba(15, 17, 23, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.06);
+}

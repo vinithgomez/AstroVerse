@@ -1,0 +1,69 @@
+MERCURY
+  Orbital Period:   88 days       (NASA rounds to 88; 87.97 is also fine to keep)
+  Rotation Period:  1416 hours    (59 days × 24 hours — matches NASA's stated day count)
+  Axial Tilt:       2°            (NASA's stated value — use this, not 0.034°)
+  Radius:           2440 km       (matches NASA)
+  Distance from Sun: 58 million km (matches NASA)
+
+VENUS
+  Orbital Period:   224.7 days
+  Rotation Period:  -5832.5 hours  ← negative = rotates backwards
+  Axial Tilt:       177.4°
+  Radius:           6052 km
+  Distance from Sun: 108.2 million km
+
+EARTH
+  Orbital Period:   365.25 days
+  Rotation Period:  23.9 hours
+  Axial Tilt:       23.4°
+  Radius:           6371 km
+  Distance from Sun: 149.6 million km
+
+MARS
+  Orbital Period:   687 days
+  Rotation Period:  24.6 hours
+  Axial Tilt:       25.2°
+  Radius:           3389.5 km
+  Distance from Sun: 227.9 million km
+
+JUPITER
+  Orbital Period:   4331 days
+  Rotation Period:  9.9 hours
+  Axial Tilt:       3.1°
+  Radius:           69911 km
+  Distance from Sun: 778.5 million km
+
+SATURN
+  Orbital Period:   10747 days
+  Rotation Period:  10.7 hours
+  Axial Tilt:       26.7°
+  Radius:           58232 km
+  Distance from Sun: 1432 million km
+
+URANUS
+  Orbital Period:   30589 days
+  Rotation Period:  -17.2 hours   ← negative = rotates backwards
+  Axial Tilt:       97.8°         ← orbits on its side
+  Radius:           25362 km
+  Distance from Sun: 2867 million km
+
+NEPTUNE
+  Orbital Period:   59800 days
+  Rotation Period:  16.1 hours
+  Axial Tilt:       28.3°
+  Radius:           24622 km
+  Distance from Sun: 4515 million km
+
+PLUTO
+  Orbital Period:   90560 days
+  Rotation Period:  -153.3 hours  ← negative = rotates backwards
+  Axial Tilt:       122.5°
+  Radius:           1188 km
+  Distance from Sun: 5906 million km
+
+MOON
+  Orbital Period:   27.3 days     ← around Earth, not Sun
+  Rotation Period:  655.7 hours
+  Axial Tilt:       6.7°
+  Radius:           1737.4 km
+  Distance from Earth: 0.384 million km
