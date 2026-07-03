@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import DesignSystem from '../pages/Dev/DesignSystem'
 import Home from '../pages/Home'
+import ModuleList from '../pages/Learn/ModuleList'
+import ModuleDetail from '../pages/Learn/ModuleDetail'
 import SignUpPage from '../pages/Auth/SignUpPage'
 import SignInPage from '../pages/Auth/SignInPage'
 
@@ -20,7 +22,8 @@ function Placeholder({ name }) {
 
 export const router = createBrowserRouter([
   { path: '/',             element: <Home /> },
-  { path: '/learn',        element: <Placeholder name="Learn" /> },
+  { path: '/learn',            element: <ModuleList /> },
+  { path: '/learn/:moduleId',  element: <ModuleDetail /> },
   {
     path: '/explorer',
     element: (
@@ -30,7 +33,8 @@ export const router = createBrowserRouter([
     ),
   },
   { path: '/quiz',         element: <Placeholder name="Quiz" /> },
-  { path: '/theories',     element: <Placeholder name="Theories" /> },
+  { path: '/theories',          element: <Placeholder name="Theories" /> },
+  { path: '/theories/:theoryId', element: <Placeholder name="Theories" /> },
   { path: '/news',         element: <Placeholder name="News" /> },
   { path: '/progress',     element: <Placeholder name="Progress" /> },
   { path: '/auth/signup',  element: <SignUpPage /> },

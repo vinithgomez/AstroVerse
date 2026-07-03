@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import ExplorerCanvas from './ExplorerCanvas'
 import ControlBar from './ControlBar'
@@ -22,7 +23,12 @@ export default function ExplorerPage() {
   const [showOrbits, setShowOrbits]   = useState(true)
   const [showLabels, setShowLabels]   = useState(true)
   const [qualityLow, setQualityLow]   = useState(isLowEndDevice)
-  const [selectedId, setSelectedId]   = useState(null)
+  // Deep-link support: /explorer?focus=<bodyId>, used by Learn's "Explore in
+  // 3D" related-planet cards. Read once at mount — this is a one-shot initial
+  // selection, not a live sync back to the URL.
+  const [searchParams] = useSearchParams()
+  const initialFocus = searchParams.get('focus')
+  const [selectedId, setSelectedId]   = useState(() => (initialFocus && getBody(initialFocus)) ? initialFocus : null)
   const [resetSignal, setResetSignal] = useState(0)
   const [freeCam, setFreeCam]         = useState(false)
 

@@ -4,6 +4,7 @@ import { X, Bookmark, BookmarkCheck, BookOpen, HelpCircle } from 'lucide-react'
 import DifficultyBadge from '../../components/DifficultyBadge'
 import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../lib/supabaseClient'
+import { PLANET_TO_MODULE_ID } from '../../data/modules'
 
 function formatNumber(n) {
   return Math.round(n).toLocaleString('en-US')
@@ -136,7 +137,7 @@ export default function InfoPanel({ body, onClose }) {
           </p>
 
           <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
-            <button className="btn-primary" style={{ flex: 1 }} onClick={() => navigate(`/learn/${displayBody.id}`)}>
+            <button className="btn-primary" style={{ flex: 1 }} onClick={() => navigate(`/learn/${PLANET_TO_MODULE_ID[displayBody.id] ?? displayBody.id}`)}>
               <BookOpen size={16} strokeWidth={1.5} />
               Learn More
             </button>

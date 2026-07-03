@@ -98,9 +98,9 @@ public/textures/        Per-planet texture assets (organized by body)
 - **Landing page** (`/`) — pinned Three.js Earth hero, scroll-driven solar system reveal, and scroll-triggered content sections
 - **Authentication** (`/auth/signup`, `/auth/signin`) — Supabase email/password + Google OAuth, session handling, guest mode
 - **Solar System Explorer** (`/explorer`) — the flagship page: all 9 planets + Moon with verified orbital data, click-to-focus camera, Free Roam mode, control bar (play/pause, speed, orbit/label toggles, quality settings), and per-planet info panels
+- **Learning Modules** (`/learn`, `/learn/:moduleId`) — 20 modules across Beginner/Intermediate/Advanced tiers with real astronomy content, tier progression map with unlock gating, inline glossary tooltips, "Did You Know" facts, related planet/theory cross-links, and progress tracking (guest via `localStorage`, logged-in via Supabase)
 
 **🚧 In progress / not yet built**
-- Learning Modules (`/learn`)
 - Quiz System (`/quiz`)
 - Theories & Discoveries (`/theories`)
 - Space News (`/news`)
@@ -110,7 +110,7 @@ public/textures/        Per-planet texture assets (organized by body)
 **Known gaps**
 - Several Supabase tables referenced by the UI (`bookmarks`, `quiz_scores`, `progress`, `badges`) haven't been created yet
 - News RSS fetching needs a server-side proxy to work around CORS
-- Some planet fact-panel data (moon counts, temperatures) is drafted from general knowledge and still needs verification against NASA sources
+- Some planet fact-panel data (moon counts, temperatures) and Learning Module content is drafted from general knowledge and still needs verification against NASA sources
 
 ---
 
