@@ -45,9 +45,30 @@ export default function Sun({ onSelect, registerRef, lowEnd }) {
       {/* Primary light source for the whole scene. Intensity tuned down from
           an earlier 6 — combined with the 0.85 Bloom threshold, directly-lit
           planet faces (bright side facing the Sun) were crossing it and
-          rendering as blown-out white circles instead of their textures. */}
-      <pointLight color="#fff6e0" intensity={4.5} decay={2} />
-      <ambientLight intensity={0.12} />
+          rendering as blown-out white circles instead of their textures.
+
+          decay=2 (physically-correct inverse-square) was later found to be
+          wrong for this scene's compressed distance scale: real inverse-
+          square falloff is calibrated for astronomical distances, but here
+          Saturn/Uranus/Neptune/Pluto sit only tens of scene units out —
+          still close enough that decay=2 crushed them to a near-flat, dull
+          silhouette (confirmed via a close-up render: Saturn showed almost
+          no lit-side detail at all, unlike Earth at 1/10th the scene
+          distance). decay=0 removes distance attenuation entirely — every
+          body gets the same lighting regardless of how far out its orbit
+          is scaled — and intensity was re-tuned down from 4.5 to compensate
+          (decay=2 previously required a higher intensity specifically to
+          punch through the inverse-square falloff at inner-planet
+          distances; without any falloff, that same intensity would
+          overexpose Mercury/Venus). ambientLight also bumped 0.12 → 0.22:
+          a purely stylistic fill so a body's UNLIT night-side hemisphere
+          (which no amount of point-light retuning fixes, since a point
+          light still can't illuminate the far side of a sphere) retains
+          faint visible texture instead of reading as a flat black cutout
+          — confirmed via the Moon rendering as a featureless black disc
+          next to a well-lit Earth in the same close-up shot. */}
+      <pointLight color="#fff6e0" intensity={1.7} decay={0} />
+      <ambientLight intensity={0.22} />
 
       <mesh ref={meshRef}>
         <sphereGeometry args={[sun.scene.radius, lowEnd ? 32 : 96, lowEnd ? 32 : 96]} />

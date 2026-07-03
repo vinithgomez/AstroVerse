@@ -76,13 +76,31 @@ export default function Scene({
       {/* Luminance-threshold bloom — simpler and more robust than object-
           selection SelectiveBloom, and achieves the same "Sun only" result
           because the Sun is the only toneMapped=false / emissive-bright
-          object in the scene; lit planet surfaces never cross the threshold. */}
+          object in the scene; lit planet surfaces never cross the threshold.
+
+          multisampling was previously forced to 0 in low mode, which paired
+          with Bloom's mipmapBlur caused a full solid-black canvas on some
+          real GPU/driver combos (never reproduced under headless/software
+          WebGL, only confirmed on actual hardware) — mipmapBlur generates a
+          mip chain off the composer's render target, and some drivers choke
+          on that when the target isn't multisampled. The actual fix is
+          disabling mipmapBlur in low mode. A first attempt also bumped
+          multisampling to 2 in low mode, on the theory that SOME sample
+          count was needed — that introduced a NEW artifact instead (a solid
+          black square rendered directly over the Sun), because 2x MSAA
+          isn't a universally-supported sample count the way 0 (no
+          multisampling — always safe) is; some drivers mishandle an
+          arbitrary/unsupported sample count in the render target resolve
+          step, corrupting exactly the brightest region of the frame (the
+          Sun, the only toneMapped=false object). Reverted multisampling to
+          0 for low mode — mipmapBlur=false alone was the fix; nonzero
+          multisampling was never actually required. */}
       <EffectComposer multisampling={lowEnd ? 0 : 8}>
         <Bloom
           luminanceThreshold={0.95}
           luminanceSmoothing={0.2}
           intensity={lowEnd ? 0.4 : 0.65}
-          mipmapBlur
+          mipmapBlur={!lowEnd}
           radius={0.3}
         />
         <Vignette eskil={false} offset={0.15} darkness={0.9} />
