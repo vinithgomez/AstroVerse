@@ -108,7 +108,7 @@ public/textures/        Per-planet texture assets (organized by body)
 - Password reset flow (`/auth/reset`) — placeholder only
 
 **Known gaps**
-- Several Supabase tables referenced by the UI (`bookmarks`, `quiz_scores`, `progress`, `badges`) haven't been created yet
+- `quiz_scores` and `badges` tables exist in Supabase but have no application code writing to them yet (the Quiz system isn't built)
 - News RSS fetching needs a server-side proxy to work around CORS
 - Some planet fact-panel data (moon counts, temperatures) and Learning Module content is drafted from general knowledge and still needs verification against NASA sources
 

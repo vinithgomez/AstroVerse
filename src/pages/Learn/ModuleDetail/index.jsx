@@ -57,9 +57,26 @@ export default function ModuleDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    setBookmarked(false)
     setGuestPrompt(false)
-  }, [moduleId])
+    if (!module) return
+    if (!user) { setBookmarked(false); return }
+
+    let cancelled = false
+    supabase
+      .from('bookmarks')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('content_type', 'module')
+      .eq('content_id', module.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return
+        if (error) console.error('[ModuleDetail] failed to load bookmark state from Supabase:', error)
+        setBookmarked(!!data)
+      })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moduleId, user])
 
   useEffect(() => {
     if (!module) return
@@ -80,15 +97,22 @@ export default function ModuleDetail() {
     if (!user) { setGuestPrompt(true); return }
     setGuestPrompt(false)
     const nextVal = !bookmarked
-    setBookmarked(nextVal) // optimistic — bookmarks table not yet created, see CLAUDE.md §8
-    try {
-      if (nextVal) {
-        await supabase.from('bookmarks').upsert({ user_id: user.id, body_id: module.id })
-      } else {
-        await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('body_id', module.id)
-      }
-    } catch {
-      // Fails silently until the bookmarks table exists.
+    setBookmarked(nextVal) // optimistic — reconciled against the real write below
+
+    if (nextVal) {
+      const { error } = await supabase.from('bookmarks').upsert(
+        { user_id: user.id, content_type: 'module', content_id: module.id },
+        { onConflict: 'user_id,content_type,content_id' },
+      )
+      if (error) console.error('[ModuleDetail] failed to save bookmark to Supabase:', error)
+    } else {
+      const { error } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('content_type', 'module')
+        .eq('content_id', module.id)
+      if (error) console.error('[ModuleDetail] failed to remove bookmark from Supabase:', error)
     }
   }
 

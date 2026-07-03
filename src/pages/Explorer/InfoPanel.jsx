@@ -57,9 +57,25 @@ export default function InfoPanel({ body, onClose }) {
   }, [body])
 
   useEffect(() => {
-    setBookmarked(false)
     setGuestPrompt(false)
-  }, [displayBody?.id])
+    if (!displayBody) return
+    if (!user) { setBookmarked(false); return }
+
+    let cancelled = false
+    supabase
+      .from('bookmarks')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('content_type', 'planet')
+      .eq('content_id', displayBody.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return
+        if (error) console.error('[InfoPanel] failed to load bookmark state from Supabase:', error)
+        setBookmarked(!!data)
+      })
+    return () => { cancelled = true }
+  }, [displayBody?.id, user])
 
   const open = !!body
 
@@ -68,16 +84,22 @@ export default function InfoPanel({ body, onClose }) {
     if (!user) { setGuestPrompt(true); return }
     setGuestPrompt(false)
     const next = !bookmarked
-    setBookmarked(next) // optimistic — see CLAUDE.md §8, bookmarks table not yet created
-    try {
-      if (next) {
-        await supabase.from('bookmarks').upsert({ user_id: user.id, body_id: displayBody.id })
-      } else {
-        await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('body_id', displayBody.id)
-      }
-    } catch {
-      // Fails silently until the bookmarks table exists — the optimistic
-      // toggle still reflects intent for the current session.
+    setBookmarked(next) // optimistic — reconciled against the real write below
+
+    if (next) {
+      const { error } = await supabase.from('bookmarks').upsert(
+        { user_id: user.id, content_type: 'planet', content_id: displayBody.id },
+        { onConflict: 'user_id,content_type,content_id' },
+      )
+      if (error) console.error('[InfoPanel] failed to save bookmark to Supabase:', error)
+    } else {
+      const { error } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('content_type', 'planet')
+        .eq('content_id', displayBody.id)
+      if (error) console.error('[InfoPanel] failed to remove bookmark from Supabase:', error)
     }
   }
 
