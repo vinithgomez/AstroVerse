@@ -99,18 +99,17 @@ public/textures/        Per-planet texture assets (organized by body)
 - **Authentication** (`/auth/signup`, `/auth/signin`) — Supabase email/password + Google OAuth, session handling, guest mode
 - **Solar System Explorer** (`/explorer`) — the flagship page: all 9 planets + Moon with verified orbital data, click-to-focus camera, Free Roam mode, control bar (play/pause, speed, orbit/label toggles, quality settings), and per-planet info panels
 - **Learning Modules** (`/learn`, `/learn/:moduleId`) — 20 modules across Beginner/Intermediate/Advanced tiers with real astronomy content, tier progression map with unlock gating, inline glossary tooltips, "Did You Know" facts, related planet/theory cross-links, and progress tracking (guest via `localStorage`, logged-in via Supabase)
+- **Quiz System** (`/quiz`, `/quiz/play`) — 124 questions across all 20 topics and five question types (multiple choice, true/false, fill-in-the-blank, image-based, ordering), topic/difficulty selection with a Random Mix option, immediate per-question feedback with explanations, full results breakdown, and badge/score persistence to Supabase for logged-in users
 
 **🚧 In progress / not yet built**
-- Quiz System (`/quiz`)
 - Theories & Discoveries (`/theories`)
 - Space News (`/news`)
 - Progress Dashboard (`/progress`)
 - Password reset flow (`/auth/reset`) — placeholder only
 
 **Known gaps**
-- `quiz_scores` and `badges` tables exist in Supabase but have no application code writing to them yet (the Quiz system isn't built)
 - News RSS fetching needs a server-side proxy to work around CORS
-- Some planet fact-panel data (moon counts, temperatures) and Learning Module content is drafted from general knowledge and still needs verification against NASA sources
+- Some planet fact-panel data (moon counts, temperatures), Learning Module content, and Quiz question content is drafted from general knowledge and still needs verification against NASA sources
 
 ---
 
