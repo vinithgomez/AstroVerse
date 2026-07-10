@@ -8,6 +8,8 @@ import QuizStart from '../pages/Quiz/QuizStart'
 import QuizPlay from '../pages/Quiz/QuizPlay'
 import TheoriesHub from '../pages/Theories/TheoriesHub'
 import TheoryDetail from '../pages/Theories/TheoryDetail'
+import News from '../pages/News'
+import ProgressPage from '../pages/Progress'
 import SignUpPage from '../pages/Auth/SignUpPage'
 import SignInPage from '../pages/Auth/SignInPage'
 
@@ -40,8 +42,8 @@ export const router = createBrowserRouter([
   { path: '/quiz/play',    element: <QuizPlay /> },
   { path: '/theories',          element: <TheoriesHub /> },
   { path: '/theories/:theoryId', element: <TheoryDetail /> },
-  { path: '/news',         element: <Placeholder name="News" /> },
-  { path: '/progress',     element: <Placeholder name="Progress" /> },
+  { path: '/news',         element: <News /> },
+  { path: '/progress',     element: <ProgressPage /> },
   { path: '/auth/signup',  element: <SignUpPage /> },
   { path: '/auth/signin',  element: <SignInPage /> },
   { path: '/auth/reset',   element: <Placeholder name="Reset Password" /> },

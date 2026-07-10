@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import {
   ArrowLeft, ArrowRight, Clock, Bookmark, BookmarkCheck,
@@ -43,6 +43,11 @@ export default function ModuleDetail() {
   const { progressMap, markInProgress, markComplete, isGuest } = useProgress()
   const [bookmarked, setBookmarked] = useState(false)
   const [guestPrompt, setGuestPrompt] = useState(false)
+  // Guards against a race where the initial "is this bookmarked?" read
+  // resolves AFTER the user has already manually toggled it — without this,
+  // the stale response silently overwrites the optimistic update, making a
+  // real click appear to do nothing if it happens right after page load.
+  const hasToggledRef = useRef(false)
 
   // A term already tooltipped once earlier in the lesson shouldn't be
   // wrapped again every time it repeats — shared across all sections here.
@@ -58,6 +63,7 @@ export default function ModuleDetail() {
   useEffect(() => {
     window.scrollTo(0, 0)
     setGuestPrompt(false)
+    hasToggledRef.current = false
     if (!module) return
     if (!user) { setBookmarked(false); return }
 
@@ -70,7 +76,7 @@ export default function ModuleDetail() {
       .eq('content_id', module.id)
       .maybeSingle()
       .then(({ data, error }) => {
-        if (cancelled) return
+        if (cancelled || hasToggledRef.current) return
         if (error) console.error('[ModuleDetail] failed to load bookmark state from Supabase:', error)
         setBookmarked(!!data)
       })
@@ -81,9 +87,17 @@ export default function ModuleDetail() {
   useEffect(() => {
     if (!module) return
     // Visiting a module counts as starting it, unless it's already complete.
+    // Depends on `user` too, not just module?.id — on a hard page load/
+    // refresh, AuthContext's session restore hasn't resolved yet on the
+    // very first render, so markInProgress's closure would otherwise be
+    // permanently bound to user=undefined and silently skip the Supabase
+    // write (falls through the `if (user)` guard in useProgress's
+    // setStatus). Re-running once `user` actually resolves fixes that
+    // without risking a loop, since `user` only transitions once per
+    // session (null/undefined → the resolved user object).
     if (progressMap[module.id] !== 'complete') markInProgress(module.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [module?.id])
+  }, [module?.id, user])
 
   if (!module) return <NotFound />
 
@@ -96,6 +110,7 @@ export default function ModuleDetail() {
   async function handleBookmark() {
     if (!user) { setGuestPrompt(true); return }
     setGuestPrompt(false)
+    hasToggledRef.current = true
     const nextVal = !bookmarked
     setBookmarked(nextVal) // optimistic — reconciled against the real write below
 

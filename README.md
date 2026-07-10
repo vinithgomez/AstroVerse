@@ -101,15 +101,15 @@ public/textures/        Per-planet texture assets (organized by body)
 - **Learning Modules** (`/learn`, `/learn/:moduleId`) — 20 modules across Beginner/Intermediate/Advanced tiers with real astronomy content, tier progression map with unlock gating, inline glossary tooltips, "Did You Know" facts, related planet/theory cross-links, and progress tracking (guest via `localStorage`, logged-in via Supabase)
 - **Quiz System** (`/quiz`, `/quiz/play`) — 124 questions across all 20 topics and five question types (multiple choice, true/false, fill-in-the-blank, image-based, ordering), topic/difficulty selection with a Random Mix option, immediate per-question feedback with explanations, full results breakdown, and badge/score persistence to Supabase for logged-in users
 - **Theories & Discoveries** (`/theories`, `/theories/:theoryId`) — 38 theories (cosmological, astrophysics, planetary science) plus a 27-entry Discoveries Timeline, filterable by category/status/era/difficulty with search, Beginner/Advanced explanation toggle, evidence for/against, related theory/discovery/module cross-links, and bookmarking for logged-in users
+- **Space News** (`/news`) — live NASA + Space.com RSS feeds merged server-side via a Vercel serverless function (`api/news.js`), 20-minute cache, source filtering, "Breaking" badges for <24h articles, graceful degradation if a feed is down, and bookmarking for logged-in users
+- **Progress Dashboard** (`/progress`, requires auth) — overview stats, per-tier learning progress with a dated completed-modules list, full quiz history with per-topic best scores, a badge grid (earned + locked with unlock hints), a unified filterable bookmarks list across planets/modules/theories/news, and a level preference setting
 
 **🚧 In progress / not yet built**
-- Space News (`/news`)
-- Progress Dashboard (`/progress`)
 - Password reset flow (`/auth/reset`) — placeholder only
 
 **Known gaps**
-- News RSS fetching needs a server-side proxy to work around CORS
 - Some planet fact-panel data (moon counts, temperatures), Learning Module content, Quiz question content, and Theories & Discoveries content is drafted from general knowledge and still needs verification against reliable sources
+- News bookmark persistence for a logged-in user wasn't re-verified end-to-end this session (Supabase email-confirmation rate limit blocked creating a fresh test account) — see CLAUDE.md §8
 
 ---
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Bookmark, BookmarkCheck, CheckCircle2, XCircle } from 'lucide-react'
 import Navbar from '../../../components/Navbar'
@@ -32,11 +32,17 @@ export default function TheoryDetail() {
   const [explanation, setExplanation] = useState('beginner')
   const [bookmarked, setBookmarked] = useState(false)
   const [guestPrompt, setGuestPrompt] = useState(false)
+  // Guards against a race where the initial "is this bookmarked?" read
+  // resolves AFTER the user has already manually toggled it — without this,
+  // the stale response silently overwrites the optimistic update, making a
+  // real click appear to do nothing if it happens right after page load.
+  const hasToggledRef = useRef(false)
 
   useEffect(() => {
     window.scrollTo(0, 0)
     setExplanation('beginner')
     setGuestPrompt(false)
+    hasToggledRef.current = false
     if (!theory) return
     if (!user) { setBookmarked(false); return }
 
@@ -49,7 +55,7 @@ export default function TheoryDetail() {
       .eq('content_id', theory.id)
       .maybeSingle()
       .then(({ data, error }) => {
-        if (cancelled) return
+        if (cancelled || hasToggledRef.current) return
         if (error) console.error('[TheoryDetail] failed to load bookmark state from Supabase:', error)
         setBookmarked(!!data)
       })
@@ -67,6 +73,7 @@ export default function TheoryDetail() {
   async function handleBookmark() {
     if (!user) { setGuestPrompt(true); return }
     setGuestPrompt(false)
+    hasToggledRef.current = true
     const nextVal = !bookmarked
     setBookmarked(nextVal)
 

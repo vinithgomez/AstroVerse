@@ -1,21 +1,22 @@
 import { useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
+import { getBadgeMeta, moduleMasterBadgeId } from '../data/badges'
 
 // Simple, fixed badge thresholds — writes to Supabase `badges` table for
 // logged-in users. `isFirstQuizEver` must be determined by the caller
 // (checked against quiz_scores before this quiz's own score is inserted).
+// Label/description text lives in data/badges.js (BADGE_CATALOG), shared
+// with the Progress Dashboard's badge grid so the two can't drift apart.
 export function computeEarnedBadges({ topic, percentage, isFirstQuizEver }) {
   const badges = []
   if (isFirstQuizEver) {
-    badges.push({ badge_id: 'first-steps', label: 'First Steps', description: 'Completed your first quiz.' })
+    const meta = getBadgeMeta('first-steps')
+    badges.push({ badge_id: meta.id, label: meta.label, description: meta.description })
   }
   if (percentage >= 80 && topic !== 'random-mix') {
-    badges.push({
-      badge_id: `module-master-${topic}`,
-      label: 'Module Master',
-      description: `Scored 80% or higher on the "${topic}" quiz.`,
-    })
+    const meta = getBadgeMeta(moduleMasterBadgeId(topic))
+    badges.push({ badge_id: meta.id, label: meta.label, description: meta.description })
   }
   return badges
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { X, Bookmark, BookmarkCheck, BookOpen, HelpCircle } from 'lucide-react'
 import DifficultyBadge from '../../components/DifficultyBadge'
@@ -51,6 +51,11 @@ export default function InfoPanel({ body, onClose }) {
   const [displayBody, setDisplayBody] = useState(null)
   const [bookmarked, setBookmarked]   = useState(false)
   const [guestPrompt, setGuestPrompt] = useState(false)
+  // Guards against a race where the initial "is this bookmarked?" read
+  // resolves AFTER the user has already manually toggled it — without this,
+  // the stale response silently overwrites the optimistic update, making a
+  // real click appear to do nothing if it happens right after selecting a body.
+  const hasToggledRef = useRef(false)
 
   useEffect(() => {
     if (body) setDisplayBody(body)
@@ -58,6 +63,7 @@ export default function InfoPanel({ body, onClose }) {
 
   useEffect(() => {
     setGuestPrompt(false)
+    hasToggledRef.current = false
     if (!displayBody) return
     if (!user) { setBookmarked(false); return }
 
@@ -70,7 +76,7 @@ export default function InfoPanel({ body, onClose }) {
       .eq('content_id', displayBody.id)
       .maybeSingle()
       .then(({ data, error }) => {
-        if (cancelled) return
+        if (cancelled || hasToggledRef.current) return
         if (error) console.error('[InfoPanel] failed to load bookmark state from Supabase:', error)
         setBookmarked(!!data)
       })
@@ -83,6 +89,7 @@ export default function InfoPanel({ body, onClose }) {
     if (!displayBody) return
     if (!user) { setGuestPrompt(true); return }
     setGuestPrompt(false)
+    hasToggledRef.current = true
     const next = !bookmarked
     setBookmarked(next) // optimistic — reconciled against the real write below
 
