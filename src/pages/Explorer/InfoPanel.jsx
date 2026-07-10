@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { X, Bookmark, BookmarkCheck, BookOpen, HelpCircle } from 'lucide-react'
 import DifficultyBadge from '../../components/DifficultyBadge'
+import BottomSheet from '../../components/BottomSheet'
 import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../lib/supabaseClient'
 import { PLANET_TO_MODULE_ID } from '../../data/modules'
@@ -39,6 +40,75 @@ function Stat({ label, value }) {
       <span style={STAT_LABEL}>{label}</span>
       <span style={STAT_VALUE}>{value}</span>
     </div>
+  )
+}
+
+// Shared content — identical on both the desktop side panel and the mobile
+// bottom sheet, just wrapped in a different positioned container per layout.
+function PanelContent({ displayBody, onClose, bookmarked, onBookmark, guestPrompt, navigate }) {
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-4)' }}>
+        <div>
+          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)' }}>
+            {displayBody.name}
+          </h2>
+          <DifficultyBadge level={displayBody.difficulty} />
+        </div>
+        <button onClick={onClose} className="btn-ghost" style={{ padding: 'var(--space-2)', minWidth: 44, minHeight: 44 }} aria-label="Close">
+          <X size={18} strokeWidth={1.5} />
+        </button>
+      </div>
+
+      <div style={{ marginBottom: 'var(--space-5)' }}>
+        <Stat label="Radius" value={`${formatNumber(displayBody.radiusKm)} km`} />
+        {displayBody.orbits && (
+          <Stat
+            label={displayBody.orbits === 'earth' ? 'Distance from Earth' : 'Distance from Sun'}
+            value={formatDistance(displayBody.distanceKm)}
+          />
+        )}
+        {displayBody.orbitalPeriodDays != null && (
+          <Stat label="Orbital Period" value={formatPeriodDays(displayBody.orbitalPeriodDays)} />
+        )}
+        {displayBody.rotationPeriodHours != null && (
+          <Stat label="Rotation Period" value={formatRotation(displayBody.rotationPeriodHours)} />
+        )}
+        {displayBody.axialTiltDeg != null && <Stat label="Axial Tilt" value={`${displayBody.axialTiltDeg}°`} />}
+        <Stat label="Moons" value={formatNumber(displayBody.facts.numMoons)} />
+        <Stat label="Surface Temp" value={formatTemp(displayBody.facts.tempRangeC)} />
+      </div>
+
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', lineHeight: 'var(--leading-relaxed)', marginBottom: 'var(--space-6)' }}>
+        {displayBody.facts.description}
+      </p>
+
+      <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
+        <button className="btn-primary" style={{ flex: 1 }} onClick={() => navigate(`/learn/${PLANET_TO_MODULE_ID[displayBody.id] ?? displayBody.id}`)}>
+          <BookOpen size={16} strokeWidth={1.5} />
+          Learn More
+        </button>
+        <button className="btn-secondary" style={{ flex: 1 }} onClick={() => navigate(`/quiz?topic=${displayBody.id}`)}>
+          <HelpCircle size={16} strokeWidth={1.5} />
+          Quiz Me
+        </button>
+      </div>
+
+      <button
+        onClick={onBookmark}
+        className="btn-ghost"
+        style={{ width: '100%', justifyContent: 'center', minHeight: 44, color: bookmarked ? 'var(--color-blue)' : 'var(--color-text-muted)' }}
+      >
+        {bookmarked ? <BookmarkCheck size={16} strokeWidth={1.5} /> : <Bookmark size={16} strokeWidth={1.5} />}
+        {bookmarked ? 'Bookmarked' : 'Bookmark'}
+      </button>
+
+      {guestPrompt && (
+        <p style={{ marginTop: 'var(--space-3)', textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-faint)' }}>
+          <Link to="/auth/signup" style={{ color: 'var(--color-blue)' }}>Sign up</Link> to save bookmarks across devices.
+        </p>
+      )}
+    </>
   )
 }
 
@@ -110,88 +180,36 @@ export default function InfoPanel({ body, onClose }) {
     }
   }
 
+  const contentProps = { displayBody, onClose, bookmarked, onBookmark: handleBookmark, guestPrompt, navigate }
+
   return (
-    <div
-      className="glass"
-      aria-hidden={!open}
-      style={{
-        position: 'fixed',
-        top: 'calc(64px + var(--space-4))',
-        right: open ? 'var(--space-4)' : 'calc(-1 * min(380px, 100vw))',
-        width: 'min(360px, calc(100vw - var(--space-8)))',
-        maxHeight: 'calc(100vh - 64px - var(--space-8) - 100px)',
-        overflowY: 'auto',
-        borderRadius: 'var(--radius-panel)',
-        padding: 'var(--space-6)',
-        zIndex: 60,
-        transition: 'right var(--transition-slow)',
-        pointerEvents: open ? 'auto' : 'none',
-      }}
-    >
-      {displayBody && (
-        <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-4)' }}>
-            <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 'var(--space-2)' }}>
-                {displayBody.name}
-              </h2>
-              <DifficultyBadge level={displayBody.difficulty} />
-            </div>
-            <button onClick={onClose} className="btn-ghost" style={{ padding: 'var(--space-2)' }} aria-label="Close">
-              <X size={18} strokeWidth={1.5} />
-            </button>
-          </div>
+    <>
+      {/* Desktop: side panel sliding in from the right — unchanged. */}
+      <div
+        className="glass hidden md:block"
+        aria-hidden={!open}
+        style={{
+          position: 'fixed',
+          top: 'calc(64px + var(--space-4))',
+          right: open ? 'var(--space-4)' : 'calc(-1 * min(380px, 100vw))',
+          width: 'min(360px, calc(100vw - var(--space-8)))',
+          maxHeight: 'calc(100vh - 64px - var(--space-8) - 100px)',
+          overflowY: 'auto',
+          borderRadius: 'var(--radius-panel)',
+          padding: 'var(--space-6)',
+          zIndex: 60,
+          transition: 'right var(--transition-slow)',
+          pointerEvents: open ? 'auto' : 'none',
+        }}
+      >
+        {displayBody && <PanelContent {...contentProps} />}
+      </div>
 
-          <div style={{ marginBottom: 'var(--space-5)' }}>
-            <Stat label="Radius" value={`${formatNumber(displayBody.radiusKm)} km`} />
-            {displayBody.orbits && (
-              <Stat
-                label={displayBody.orbits === 'earth' ? 'Distance from Earth' : 'Distance from Sun'}
-                value={formatDistance(displayBody.distanceKm)}
-              />
-            )}
-            {displayBody.orbitalPeriodDays != null && (
-              <Stat label="Orbital Period" value={formatPeriodDays(displayBody.orbitalPeriodDays)} />
-            )}
-            {displayBody.rotationPeriodHours != null && (
-              <Stat label="Rotation Period" value={formatRotation(displayBody.rotationPeriodHours)} />
-            )}
-            {displayBody.axialTiltDeg != null && <Stat label="Axial Tilt" value={`${displayBody.axialTiltDeg}°`} />}
-            <Stat label="Moons" value={formatNumber(displayBody.facts.numMoons)} />
-            <Stat label="Surface Temp" value={formatTemp(displayBody.facts.tempRangeC)} />
-          </div>
-
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', lineHeight: 'var(--leading-relaxed)', marginBottom: 'var(--space-6)' }}>
-            {displayBody.facts.description}
-          </p>
-
-          <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
-            <button className="btn-primary" style={{ flex: 1 }} onClick={() => navigate(`/learn/${PLANET_TO_MODULE_ID[displayBody.id] ?? displayBody.id}`)}>
-              <BookOpen size={16} strokeWidth={1.5} />
-              Learn More
-            </button>
-            <button className="btn-secondary" style={{ flex: 1 }} onClick={() => navigate(`/quiz?topic=${displayBody.id}`)}>
-              <HelpCircle size={16} strokeWidth={1.5} />
-              Quiz Me
-            </button>
-          </div>
-
-          <button
-            onClick={handleBookmark}
-            className="btn-ghost"
-            style={{ width: '100%', justifyContent: 'center', color: bookmarked ? 'var(--color-blue)' : 'var(--color-text-muted)' }}
-          >
-            {bookmarked ? <BookmarkCheck size={16} strokeWidth={1.5} /> : <Bookmark size={16} strokeWidth={1.5} />}
-            {bookmarked ? 'Bookmarked' : 'Bookmark'}
-          </button>
-
-          {guestPrompt && (
-            <p style={{ marginTop: 'var(--space-3)', textAlign: 'center', fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-faint)' }}>
-              <Link to="/auth/signup" style={{ color: 'var(--color-blue)' }}>Sign up</Link> to save bookmarks across devices.
-            </p>
-          )}
-        </>
-      )}
-    </div>
+      {/* Mobile: bottom sheet — a side panel would eat too much of a narrow
+          screen. */}
+      <BottomSheet open={open} onClose={onClose} zIndex={60}>
+        {displayBody && <PanelContent {...contentProps} />}
+      </BottomSheet>
+    </>
   )
 }

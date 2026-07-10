@@ -103,6 +103,7 @@ public/textures/        Per-planet texture assets (organized by body)
 - **Theories & Discoveries** (`/theories`, `/theories/:theoryId`) — 38 theories (cosmological, astrophysics, planetary science) plus a 27-entry Discoveries Timeline, filterable by category/status/era/difficulty with search, Beginner/Advanced explanation toggle, evidence for/against, related theory/discovery/module cross-links, and bookmarking for logged-in users
 - **Space News** (`/news`) — live NASA + Space.com RSS feeds merged server-side via a Vercel serverless function (`api/news.js`), 20-minute cache, source filtering, "Breaking" badges for <24h articles, graceful degradation if a feed is down, and bookmarking for logged-in users
 - **Progress Dashboard** (`/progress`, requires auth) — overview stats, per-tier learning progress with a dated completed-modules list, full quiz history with per-topic best scores, a badge grid (earned + locked with unlock hints), a unified filterable bookmarks list across planets/modules/theories/news, and a level preference setting
+- **Mobile & tablet responsiveness** — every page audited and fixed for 375px–768px+ widths: hamburger nav, mobile bottom sheets (Explorer's info panel, Theories' filter drawer), a compact/expandable mobile control bar for the Explorer, and 44px-minimum touch targets throughout
 
 **🚧 In progress / not yet built**
 - Password reset flow (`/auth/reset`) — placeholder only

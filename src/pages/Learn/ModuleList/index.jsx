@@ -179,6 +179,9 @@ export default function ModuleList() {
                       transition: 'all var(--transition-base)',
                       background: active ? 'var(--color-blue)' : 'transparent',
                       color: active ? '#fff' : 'var(--color-text-muted)',
+                      minHeight: 44,
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     {f.label}
@@ -203,6 +206,7 @@ export default function ModuleList() {
                   fontFamily: 'var(--font-body)',
                   fontSize: 'var(--text-sm)',
                   outline: 'none',
+                  minHeight: 44,
                 }}
               />
             </div>

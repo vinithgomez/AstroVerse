@@ -103,7 +103,7 @@ export default function TheoryDetail() {
 
           <Link
             to="/theories"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-8)' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-8)', minHeight: 44 }}
           >
             <ArrowLeft size={15} strokeWidth={1.5} />
             All Theories
@@ -117,7 +117,7 @@ export default function TheoryDetail() {
                 onClick={handleBookmark}
                 className="btn-ghost"
                 aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this theory'}
-                style={{ color: bookmarked ? 'var(--color-blue)' : 'var(--color-text-muted)' }}
+                style={{ color: bookmarked ? 'var(--color-blue)' : 'var(--color-text-muted)', minWidth: 44, minHeight: 44, justifyContent: 'center' }}
               >
                 {bookmarked ? <BookmarkCheck size={20} strokeWidth={1.5} /> : <Bookmark size={20} strokeWidth={1.5} />}
               </button>
@@ -158,6 +158,9 @@ export default function TheoryDetail() {
                     transition: 'all var(--transition-base)',
                     background: active ? 'var(--color-blue)' : 'transparent',
                     color: active ? '#fff' : 'var(--color-text-muted)',
+                    minHeight: 44,
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   {level}

@@ -56,8 +56,9 @@ export default function NewsCard({ article, bookmarked, onToggleBookmark }) {
         aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this article'}
         className="btn-ghost"
         style={{
-          position: 'absolute', top: 'var(--space-3)', right: 'var(--space-3)',
-          padding: 'var(--space-2)', background: 'rgba(10,10,15,0.6)', backdropFilter: 'blur(8px)',
+          position: 'absolute', top: 'var(--space-2)', right: 'var(--space-2)',
+          width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(10,10,15,0.6)', backdropFilter: 'blur(8px)',
           color: bookmarked ? 'var(--color-blue)' : '#fff', borderRadius: 'var(--radius-full)',
         }}
       >

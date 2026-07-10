@@ -214,10 +214,10 @@ function QuestionCard({ q, onAnswered }) {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', color: 'var(--color-text-faint)', minWidth: 16 }}>{i + 1}</span>
               <span style={{ flex: 1, fontFamily: 'var(--font-body)', fontSize: 'var(--text-base)', color: 'var(--color-text-primary)' }}>{item}</span>
               <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-                <button onClick={() => moveItem(i, -1)} disabled={submitted || i === 0} className="btn-ghost" style={{ padding: 'var(--space-1)' }} aria-label="Move up">
+                <button onClick={() => moveItem(i, -1)} disabled={submitted || i === 0} className="btn-ghost" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }} aria-label="Move up">
                   <ChevronUp size={16} strokeWidth={1.5} />
                 </button>
-                <button onClick={() => moveItem(i, 1)} disabled={submitted || i === orderState.length - 1} className="btn-ghost" style={{ padding: 'var(--space-1)' }} aria-label="Move down">
+                <button onClick={() => moveItem(i, 1)} disabled={submitted || i === orderState.length - 1} className="btn-ghost" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }} aria-label="Move down">
                   <ChevronDown size={16} strokeWidth={1.5} />
                 </button>
               </div>

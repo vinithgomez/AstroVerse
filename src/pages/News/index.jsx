@@ -145,6 +145,9 @@ export default function News() {
                       transition: 'all var(--transition-base)',
                       background: active ? 'var(--color-blue)' : 'transparent',
                       color: active ? '#fff' : 'var(--color-text-muted)',
+                      minHeight: 44,
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     {s}

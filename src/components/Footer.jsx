@@ -23,7 +23,11 @@ export default function Footer() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <Link
             to="/"
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'var(--color-text-primary)', flexShrink: 0 }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
+              fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'var(--color-text-primary)',
+              flexShrink: 0, padding: 'var(--space-2) 0', minHeight: 44,
+            }}
           >
             <LogoMark size={22} />
             AstroVerse
@@ -35,11 +39,13 @@ export default function Footer() {
                 key={to}
                 to={to}
                 style={{
+                  display: 'flex', alignItems: 'center',
                   fontFamily: 'var(--font-body)',
                   fontSize: 'var(--text-sm)',
                   fontWeight: 'var(--weight-medium)',
                   color: 'var(--color-text-muted)',
                   padding: 'var(--space-2) var(--space-4)',
+                  minHeight: 44,
                   borderRadius: 'var(--radius-btn)',
                   transition: 'color var(--transition-base)',
                 }}

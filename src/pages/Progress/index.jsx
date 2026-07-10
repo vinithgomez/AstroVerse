@@ -450,6 +450,7 @@ function Dashboard({ user }) {
                       padding: 'var(--space-2) var(--space-4)', borderRadius: '6px', fontSize: 'var(--text-sm)', fontWeight: 500,
                       fontFamily: 'var(--font-body)', transition: 'all var(--transition-base)',
                       background: active ? 'var(--color-blue)' : 'transparent', color: active ? '#fff' : 'var(--color-text-muted)',
+                      minHeight: 44, display: 'flex', alignItems: 'center',
                     }}
                   >
                     {f.label}
@@ -538,6 +539,7 @@ function Dashboard({ user }) {
                     padding: 'var(--space-2) var(--space-4)', borderRadius: '6px', fontSize: 'var(--text-sm)', fontWeight: 500,
                     fontFamily: 'var(--font-body)', transition: 'all var(--transition-base)',
                     background: active ? 'var(--color-blue)' : 'transparent', color: active ? '#fff' : 'var(--color-text-muted)',
+                    minHeight: 44, display: 'flex', alignItems: 'center',
                   }}
                 >
                   {l.label}

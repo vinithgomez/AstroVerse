@@ -38,7 +38,10 @@ export default function Navbar() {
         <Link
           to="/"
           className="flex items-center gap-2"
-          style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-lg)', color: 'var(--color-text-primary)' }}
+          style={{
+            fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-lg)', color: 'var(--color-text-primary)',
+            padding: 'var(--space-2) 0', minHeight: 44,
+          }}
         >
           <LogoMark size={22} />
           AstroVerse
@@ -78,22 +81,27 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Mobile toggle */}
+        {/* Mobile toggle — explicit 44px minimum, .btn-ghost's own padding
+            alone renders at ~36px, under the tap-target guideline. */}
         <button
           className="md:hidden btn-ghost"
           onClick={() => setOpen(o => !o)}
           aria-label="Toggle menu"
+          style={{ minWidth: 44, minHeight: 44 }}
         >
           {open ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — solid (not glass-translucent) background so hero/page
+          content directly behind the dropdown never bleeds through and
+          competes with the nav text. */}
       {open && (
         <div
           className="md:hidden border-t"
           style={{
             borderColor: 'var(--glass-border)',
+            background: 'var(--color-bg)',
             padding: 'var(--space-4) var(--space-6)',
             display: 'flex',
             flexDirection: 'column',
@@ -105,7 +113,7 @@ export default function Navbar() {
               key={to}
               to={to}
               className="btn-ghost"
-              style={{ justifyContent: 'flex-start' }}
+              style={{ justifyContent: 'flex-start', minHeight: 44 }}
               onClick={() => setOpen(false)}
             >
               {label}

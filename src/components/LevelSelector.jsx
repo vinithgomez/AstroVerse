@@ -28,6 +28,9 @@ export default function LevelSelector({ value, onChange }) {
               background: active ? 'var(--color-blue)' : 'transparent',
               color: active ? '#fff' : 'var(--color-text-muted)',
               boxShadow: active ? '0 0 12px var(--color-blue-glow)' : 'none',
+              minHeight: 44,
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             {level}

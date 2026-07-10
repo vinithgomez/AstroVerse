@@ -224,7 +224,11 @@ export default function SignInPage() {
               <button
                 type="button" onClick={() => setShowPw(v => !v)} tabIndex={-1}
                 aria-label={showPw ? 'Hide password' : 'Show password'}
-                style={{ position: 'absolute', right: 'var(--space-3)', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-faint)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 0 }}
+                style={{
+                  position: 'absolute', right: 0, top: 0, bottom: 0, width: 44,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--color-text-faint)', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                }}
               >
                 {showPw ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
               </button>
