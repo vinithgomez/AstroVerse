@@ -1,10 +1,11 @@
-import { CheckCircle2, FlaskConical, XCircle, MessageCircleQuestion } from 'lucide-react'
+import { CheckCircle2, FlaskConical, XCircle, MessageCircleQuestion, ShieldCheck } from 'lucide-react'
 
 const VARIANTS = {
-  proven:     { cls: 'badge badge-proven',     Icon: CheckCircle2,          label: 'Proven' },
-  hypothesis: { cls: 'badge badge-hypothesis', Icon: FlaskConical,           label: 'Hypothesis' },
-  disproven:  { cls: 'badge badge-disproven',  Icon: XCircle,               label: 'Disproven' },
-  debated:    { cls: 'badge badge-debated',    Icon: MessageCircleQuestion,  label: 'Debated' },
+  proven:          { cls: 'badge badge-proven',          Icon: CheckCircle2,          label: 'Proven' },
+  'strong-evidence': { cls: 'badge badge-strong-evidence', Icon: ShieldCheck,           label: 'Strong Evidence' },
+  hypothesis:      { cls: 'badge badge-hypothesis',      Icon: FlaskConical,          label: 'Hypothesis' },
+  disproven:       { cls: 'badge badge-disproven',       Icon: XCircle,               label: 'Disproven' },
+  debated:         { cls: 'badge badge-debated',         Icon: MessageCircleQuestion, label: 'Debated' },
 }
 
 export default function Badge({ variant = 'hypothesis', children }) {

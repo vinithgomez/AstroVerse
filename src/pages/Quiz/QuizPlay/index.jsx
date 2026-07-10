@@ -12,6 +12,7 @@ import { getModule, TIERS, getModulesByTier, getUnlockThreshold } from '../../..
 import { getQuestionsForTopic, getQuestionsForTopics, generateQuizSet } from '../../../data/quizBank'
 import { useQuizSubmission } from '../../../hooks/useQuizSubmission'
 import { useProgress } from '../../../hooks/useProgress'
+import { isFuzzyMatch } from '../../../lib/fuzzyMatch'
 
 function shuffle(array) {
   const copy = [...array]
@@ -110,13 +111,9 @@ function QuestionCard({ q, onAnswered }) {
     finish(val ? 'True' : 'False', q.correctAnswer ? 'True' : 'False', val === q.correctAnswer)
   }
 
-  function normalize(s) {
-    return s.trim().toLowerCase().replace(/\s+/g, ' ')
-  }
   function handleFillSubmit() {
     if (submitted || !textAnswer.trim()) return
-    const norm = normalize(textAnswer)
-    const isCorrect = q.acceptableAnswers.some(a => normalize(a) === norm)
+    const isCorrect = isFuzzyMatch(textAnswer, q.acceptableAnswers)
     finish(textAnswer.trim(), q.acceptableAnswers[0], isCorrect)
   }
 

@@ -6,6 +6,8 @@ import ModuleList from '../pages/Learn/ModuleList'
 import ModuleDetail from '../pages/Learn/ModuleDetail'
 import QuizStart from '../pages/Quiz/QuizStart'
 import QuizPlay from '../pages/Quiz/QuizPlay'
+import TheoriesHub from '../pages/Theories/TheoriesHub'
+import TheoryDetail from '../pages/Theories/TheoryDetail'
 import SignUpPage from '../pages/Auth/SignUpPage'
 import SignInPage from '../pages/Auth/SignInPage'
 
@@ -36,8 +38,8 @@ export const router = createBrowserRouter([
   },
   { path: '/quiz',         element: <QuizStart /> },
   { path: '/quiz/play',    element: <QuizPlay /> },
-  { path: '/theories',          element: <Placeholder name="Theories" /> },
-  { path: '/theories/:theoryId', element: <Placeholder name="Theories" /> },
+  { path: '/theories',          element: <TheoriesHub /> },
+  { path: '/theories/:theoryId', element: <TheoryDetail /> },
   { path: '/news',         element: <Placeholder name="News" /> },
   { path: '/progress',     element: <Placeholder name="Progress" /> },
   { path: '/auth/signup',  element: <SignUpPage /> },

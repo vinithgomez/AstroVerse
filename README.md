@@ -100,16 +100,16 @@ public/textures/        Per-planet texture assets (organized by body)
 - **Solar System Explorer** (`/explorer`) — the flagship page: all 9 planets + Moon with verified orbital data, click-to-focus camera, Free Roam mode, control bar (play/pause, speed, orbit/label toggles, quality settings), and per-planet info panels
 - **Learning Modules** (`/learn`, `/learn/:moduleId`) — 20 modules across Beginner/Intermediate/Advanced tiers with real astronomy content, tier progression map with unlock gating, inline glossary tooltips, "Did You Know" facts, related planet/theory cross-links, and progress tracking (guest via `localStorage`, logged-in via Supabase)
 - **Quiz System** (`/quiz`, `/quiz/play`) — 124 questions across all 20 topics and five question types (multiple choice, true/false, fill-in-the-blank, image-based, ordering), topic/difficulty selection with a Random Mix option, immediate per-question feedback with explanations, full results breakdown, and badge/score persistence to Supabase for logged-in users
+- **Theories & Discoveries** (`/theories`, `/theories/:theoryId`) — 38 theories (cosmological, astrophysics, planetary science) plus a 27-entry Discoveries Timeline, filterable by category/status/era/difficulty with search, Beginner/Advanced explanation toggle, evidence for/against, related theory/discovery/module cross-links, and bookmarking for logged-in users
 
 **🚧 In progress / not yet built**
-- Theories & Discoveries (`/theories`)
 - Space News (`/news`)
 - Progress Dashboard (`/progress`)
 - Password reset flow (`/auth/reset`) — placeholder only
 
 **Known gaps**
 - News RSS fetching needs a server-side proxy to work around CORS
-- Some planet fact-panel data (moon counts, temperatures), Learning Module content, and Quiz question content is drafted from general knowledge and still needs verification against NASA sources
+- Some planet fact-panel data (moon counts, temperatures), Learning Module content, Quiz question content, and Theories & Discoveries content is drafted from general knowledge and still needs verification against reliable sources
 
 ---
 
