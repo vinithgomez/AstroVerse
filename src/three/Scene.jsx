@@ -78,30 +78,74 @@ export default function Scene({
           because the Sun is the only toneMapped=false / emissive-bright
           object in the scene; lit planet surfaces never cross the threshold.
 
-          multisampling was previously forced to 0 in low mode, which paired
-          with Bloom's mipmapBlur caused a full solid-black canvas on some
-          real GPU/driver combos (never reproduced under headless/software
-          WebGL, only confirmed on actual hardware) — mipmapBlur generates a
-          mip chain off the composer's render target, and some drivers choke
-          on that when the target isn't multisampled. The actual fix is
-          disabling mipmapBlur in low mode. A first attempt also bumped
-          multisampling to 2 in low mode, on the theory that SOME sample
-          count was needed — that introduced a NEW artifact instead (a solid
-          black square rendered directly over the Sun), because 2x MSAA
-          isn't a universally-supported sample count the way 0 (no
-          multisampling — always safe) is; some drivers mishandle an
-          arbitrary/unsupported sample count in the render target resolve
-          step, corrupting exactly the brightest region of the frame (the
-          Sun, the only toneMapped=false object). Reverted multisampling to
-          0 for low mode — mipmapBlur=false alone was the fix; nonzero
-          multisampling was never actually required. */}
-      <EffectComposer multisampling={lowEnd ? 0 : 8}>
+          `mipmapBlur` is permanently OFF here, in BOTH quality modes — this
+          is the final fix for the long-standing black-screen bug (CLAUDE.md
+          §8), closed out 2026-07-10 after finally reproducing and screenshot-
+          verifying it against real GPU hardware (an AMD Radeon via ANGLE/
+          D3D11 — Playwright launched with `--use-gl=angle --use-angle=d3d11
+          --ignore-gpu-blocklist`, NOT the software/SwiftShader fallback
+          headless Chromium uses by default, which never reproduced this bug
+          in any earlier session).
+
+          Two earlier fix attempts targeted the wrong variable:
+          1. First diagnosis (an earlier session, different reporting
+             context): assumed `multisampling: 0` + `mipmapBlur` was the bad
+             combo specifically in LOW quality mode, and "fixed" it with
+             `mipmapBlur={!lowEnd}` (i.e. mipmapBlur ON in high mode, OFF in
+             low mode) + multisampling left at `lowEnd ? 0 : 8`. That code
+             shipped but was never actually screenshot-verified — it just
+             looked plausible on paper.
+          2. This session's real-GPU screenshot pass proved that fix was
+             backwards for at least this hardware: LOW quality (mipmapBlur
+             off) rendered perfectly every time — Sun, planets, orbits,
+             starfield, all correct. HIGH quality (mipmapBlur ON) went solid
+             black — Sun, planets, orbits, and starfield all invisible,
+             only the DOM-overlaid text labels still showing — on a cold
+             load, after toggling low→high, and on an Earth close-up.
+             Oddly, a Saturn close-up in nominally the same HIGH/mipmapBlur-
+             on state rendered fine, which rules out a purely deterministic
+             per-mode bug and points instead at a genuine race in the
+             driver's mip-chain generation for the Bloom render target —
+             i.e. mipmapBlur is unsafe on this GPU regardless of framing,
+             it just doesn't fail on literally every single frame.
+
+          Given mipmapBlur has now caused a full black-screen failure in TWO
+          separate real-GPU/driver combinations (whatever produced the
+          original low-quality report, and this session's AMD/ANGLE/D3D11
+          setup) under DIFFERENT multisampling values each time, the only
+          fix that isn't just "reshuffle which mode is currently lucky" is
+          to never use it at all. `radius` was bumped 0.3 → 0.45 and low-
+          mode `intensity` 0.4 → 0.5 to compensate for losing mipmapBlur's
+          extra softness/spread — see the visual-quality pass below.
+
+          `multisampling` is ALSO now forced to 0 in both modes, not just
+          low. With mipmapBlur removed, the full-canvas black screen is
+          gone at multisampling=8 (the high-quality value) — but a smaller,
+          related artifact remained: a sharp solid-black rectangle
+          corrupting the frame directly around a planet's label (Neptune,
+          reproduced consistently), never happening at multisampling=0.
+          This is the exact same failure signature already documented above
+          for `multisampling: 2` in an earlier session ("some drivers
+          mishandle an arbitrary/unsupported sample count in the render
+          target resolve step, corrupting exactly the brightest region of
+          the frame") — just triggered by 8x instead of 2x on this
+          particular driver. Between three separate observed sample counts
+          (2, 8, and implicitly whatever the original low-quality report's
+          GPU choked on) all causing resolve corruption of some kind, and
+          only 0 ever being clean across every test, nonzero multisampling
+          on the EffectComposer isn't safe on this hardware at any value —
+          so it's off unconditionally. The base WebGL context's own
+          `antialias` prop (set in ExplorerCanvas.jsx, still `!lowEnd`)
+          is a separate, unrelated antialiasing mechanism applied before
+          post-processing even runs, so high quality doesn't lose edge AA
+          entirely by dropping this. */}
+      <EffectComposer multisampling={0}>
         <Bloom
           luminanceThreshold={0.95}
           luminanceSmoothing={0.2}
-          intensity={lowEnd ? 0.4 : 0.65}
-          mipmapBlur={!lowEnd}
-          radius={0.3}
+          intensity={lowEnd ? 0.5 : 0.75}
+          mipmapBlur={false}
+          radius={0.45}
         />
         <Vignette eskil={false} offset={0.15} darkness={0.9} />
       </EffectComposer>
