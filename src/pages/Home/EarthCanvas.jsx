@@ -70,7 +70,7 @@ export default function EarthCanvas({ heroProgress, lowEnd }) {
         }}
       >
         <Canvas
-          gl={{ antialias: !lowEnd, powerPreference: 'high-performance' }}
+          gl={{ antialias: !lowEnd, powerPreference: 'default' }}
           dpr={lowEnd ? 1 : Math.min(window.devicePixelRatio, 2)}
           style={{ background: 'transparent' }}
         >
